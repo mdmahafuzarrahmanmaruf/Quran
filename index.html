@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আধুনিক কুরআন অ্যাপ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Hind+Siliguri:wght@400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #4facfe;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            background: #ffffff;
+            color: #333;
+            margin-bottom: 25px;
+            font-family: 'Hind Siliguri', sans-serif;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .ayah-container {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .ayah-text {
+            font-family: 'Amiri Quran', serif;
+            font-size: 32px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            direction: rtl;
+        }
+
+        .ayah-info {
+            font-size: 14px;
+            color: #a8c0ff;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #00f2fe;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #loader {
+            display: none;
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>পবিত্র কুরআন অ্যাপ</h1>
+        
+        <select id="surahSelect" onchange="loadSurah()">
+            <option value="">সূরা নির্বাচন করুন...</option>
+            </select>
+
+        <div id="loader">লোড হচ্ছে... দয়া করে অপেক্ষা করুন</div>
+
+        <div class="ayah-container">
+            <div id="ayahText" class="ayah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+            <div class="ayah-info" id="ayahInfo">সূরা নির্বাচন করে তিলাওয়াত শুনুন</div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" onclick="prevAyah()" disabled>পূর্বের আয়াত</button>
+            <button id="playPauseBtn" onclick="togglePlayPause()" disabled>চালু করুন</button>
+            <button id="nextBtn" onclick="nextAyah()" disabled>পরের আয়াত</button>
+        </div>
+    </div>
+
+    <script>
+        let currentAyahs = [];
+        let currentIndex = 0;
+        let audioPlayer = new Audio();
+        let isPlaying = false;
+
+        const surahSelect = document.getElementById('surahSelect');
+        const ayahText = document.getElementById('ayahText');
+        const ayahInfo = document.getElementById('ayahInfo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const loader = document.getElementById('loader');
+
+        // সূরার তালিকা লোড করা
+        async function loadSurahList() {
+            try {
+                const response = await fetch('https://api.alquran.cloud/v1/surah');
+                const data = await response.json();
+                
+                data.data.forEach(surah => {
+                    const option = document.createElement('option');
+                    option.value = surah.number;
+                    option.textContent = `${surah.number}. ${surah.englishName} (${surah.name})`;
+                    surahSelect.appendChild(option);
+                });
+            } catch (error) {
+                ayahInfo.textContent = "সূরার তালিকা লোড করতে সমস্যা হয়েছে। ইন্টারনেট কানেকশন চেক করুন।";
+            }
+        }
+
+        // নির্দিষ্ট সূরা লোড করা (মিশারি রাশিদ আল-আফাসির তিলাওয়াত সহ)
+        async function loadSurah() {
+            const surahNumber = surahSelect.value;
+            if (!surahNumber) return;
+
+            loader.style.display = "block";
+            pauseAudio();
+            disableButtons();
+
+            try {
+                const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`);
+                const data = await response.json();
+                
+                currentAyahs = data.data.ayahs;
+                currentIndex = 0;
+                
+                updateAyahDisplay();
+                loader.style.display = "none";
+                enableButtons();
+                
+                // চাইলে সূরা লোড হলেই অটো প্লে চালু করতে পারেন নিচের লাইনটি আনকমেন্ট করে:
+                // togglePlayPause(); 
+            } catch (error) {
+                loader.style.display = "none";
+                ayahInfo.textContent = "সূরা লোড করতে সমস্যা হয়েছে।";
+            }
+        }
+
+        // আয়াতের টেক্সট এবং তথ্য আপডেট করা
+        function updateAyahDisplay() {
+            if (currentAyahs.length === 0) return;
+            
+            const ayah = currentAyahs[currentIndex];
+            ayahText.textContent = ayah.text;
+            ayahInfo.textContent = `আয়াত: ${ayah.numberInSurah}`;
+            
+            audioPlayer.src = ayah.audio;
+            
+            // বাটন কন্ট্রোল
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === currentAyahs.length - 1;
+
+            if(isPlaying) {
+                audioPlayer.play().catch(e => console.log("অটো প্লে ব্রাউজার দ্বারা ব্লক করা হয়েছে"));
+            }
+        }
+
+        // প্লে এবং পজ বাটন কন্ট্রোল
+        function togglePlayPause() {
+            if (currentAyahs.length === 0) return;
+
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+
+        function playAudio() {
+            audioPlayer.play();
+            isPlaying = true;
+            playPauseBtn.textContent = "বন্ধ করুন (Pause)";
+        }
+
+        function pauseAudio() {
+            audioPlayer.pause();
+            isPlaying = false;
+            playPauseBtn.textContent = "চালু করুন (Play)";
+        }
+
+        // পরের আয়াত
+        function nextAyah() {
+            if (currentIndex < currentAyahs.length - 1) {
+                currentIndex++;
+                updateAyahDisplay();
+            }
+        }
+
+        // পূর্বের আয়াত
+        function prevAyah() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateAyahDisplay();
+            }
+        }
+
+        // একটি আয়াত শেষ হলে স্বয়ংক্রিয়ভাবে পরের আয়াত চালু করা
+        audioPlayer.addEventListener('ended', () => {
+            if (currentIndex < currentAyahs.length - 1) {
+                nextAyah();
+            } else {
+                pauseAudio(); // সূরার শেষ আয়াতে গেলে থেমে যাবে
+            }
+        });
+
+        // বাটন অন/অফ ফাংশন
+        function disableButtons() {
+            playPauseBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
+
+        function enableButtons() {
+            playPauseBtn.disabled = false;
+            // prev/next updateAyahDisplay এর ভেতরে কন্ট্রোল হচ্ছে
+        }
+
+        // অ্যাপ চালু হলে সূরার তালিকা আনবে
+        window.onload = loadSurahList;
+    </script>
+</body>
+</html>
