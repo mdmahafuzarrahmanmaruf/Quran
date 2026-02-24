@@ -5,71 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>আল কুরআন</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg: #F0F4F8; --surface: #FFFFFF; --primary: #059669; --primary-dark: #047857;
-            --primary-light: #D1FAE5; --text-main: #1E293B; --text-mut: #64748B; --border: #E2E8F0;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --bn-font-size: 18px; --ar-font-size: 34px;
+            --bg: #F9FAFB; 
+            --surface: #FFFFFF; 
+            --primary: #0F5132;
+            --primary-hover: #146C43;
+            --accent: #B8860B;
+            --accent-light: #FDF5E6;
+            --text-main: #1F2937; 
+            --text-mut: #6B7280; 
+            --border: #E5E7EB;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --bn-font-size: 18px; 
+            --ar-font-size: 34px;
         }
 
         [data-theme="dark"] {
-            --bg: #0F172A; --surface: #1E293B; --text-main: #F1F5F9;
-            --text-mut: #94A3B8; --border: #334155; --primary-light: #064E3B;
+            --bg: #111827; 
+            --surface: #1F2937; 
+            --primary: #34D399;
+            --primary-hover: #10B981;
+            --accent: #FBBF24; 
+            --accent-light: rgba(251, 191, 36, 0.1);
+            --text-main: #F3F4F6;
+            --text-mut: #9CA3AF; 
+            --border: #374151;
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans Bengali', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #1a1a1a; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+        body { background-color: #000; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
 
-        #app-container { width: 100%; max-width: 500px; background-color: var(--bg); height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.5); overflow: hidden; }
+        #app-container { width: 100%; max-width: 500px; background-color: var(--bg); height: 100vh; position: relative; display: flex; flex-direction: column; overflow: hidden; transition: background-color 0.3s ease; }
 
-        .app-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); z-index: 100; }
-        .header-title h1 { font-size: 22px; font-weight: 800; }
-        .icon-btn { background: rgba(255,255,255,0.15); border: none; width: 42px; height: 42px; border-radius: 12px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .app-header { background: var(--surface); padding: 18px 20px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 100; transition: all 0.3s; box-shadow: var(--shadow-sm); }
+        .header-title h1 { font-size: 20px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px;}
+        .icon-btn { background: transparent; border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: 0.2s; }
+        .icon-btn:hover { background: var(--bg); transform: scale(1.05); }
 
-        .top-tools { padding: 15px; background: var(--surface); border-bottom: 1px solid var(--border); }
+        .top-tools { padding: 15px 20px; background: var(--bg); border-bottom: 1px solid var(--border); }
         .search-wrapper { position: relative; margin-bottom: 15px; }
-        .search-box { width: 100%; padding: 12px 15px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); color: var(--text-main); font-size: 16px; outline: none; }
+        .search-box { width: 100%; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text-main); font-size: 15px; outline: none; box-shadow: var(--shadow-sm); transition: 0.2s; }
+        .search-box:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15, 81, 50, 0.1); }
         
-        .tabs { display: flex; gap: 10px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; background: var(--bg); color: var(--text-mut); font-weight: 700; cursor: pointer; }
-        .tab-btn.active { background: var(--primary); color: white; }
+        .tabs { display: flex; gap: 10px; background: var(--surface); padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--text-mut); font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: var(--primary); color: #fff; }
+        .tab-btn:hover:not(.active) { background: var(--accent-light); }
 
-        .main-content { flex: 1; overflow-y: auto; padding: 15px; }
-        .surah-card { background: var(--surface); padding: 15px; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; }
-        .surah-idx { width: 45px; height: 45px; background: var(--primary-light); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-right: 15px; font-size: 18px; }
+        .main-content { flex: 1; overflow-y: auto; padding: 0 20px 20px; }
+        
+        .surah-card { background: var(--surface); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); }
+        .surah-card:hover { background: var(--accent-light); transform: translateX(4px); }
+        .surah-card:active { transform: scale(0.98); }
+        
+        .surah-idx { width: 42px; height: 42px; background: var(--accent-light); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; font-size: 16px; border: 1px solid rgba(184, 134, 11, 0.2); flex-shrink: 0; }
         .surah-info { flex: 1; }
-        .surah-name { font-size: 19px; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
-        .surah-meta { font-size: 13px; color: var(--text-mut); font-weight: 600; }
+        .surah-name { font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .surah-meta { font-size: 12px; color: var(--text-mut); font-weight: 500; }
+        .surah-fav { cursor: pointer; transition: 0.2s; }
+        .surah-fav:hover { transform: scale(1.2); }
 
         #detail-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: none; flex-direction: column; }
 
-        /* Settings Panel */
-        #settings-panel { display: none; background: var(--surface); padding: 20px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow); position: absolute; top: 82px; width: 100%; z-index: 150; max-height: 80vh; overflow-y: auto;}
+        #settings-panel { display: none; background: var(--surface); padding: 20px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); position: absolute; top: 73px; width: 100%; z-index: 150; max-height: 80vh; overflow-y: auto;}
         .setting-row { margin-bottom: 15px; }
-        .setting-row label { display: block; font-weight: 500; color: var(--text-main); margin-bottom: 8px; font-size: 14px; }
-        .setting-row select, .setting-row input[type="range"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); font-weight: 600; }
+        .setting-row label { display: block; font-weight: 600; color: var(--text-mut); margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .setting-row select, .setting-row input[type="range"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); font-weight: 500; outline: none; transition: 0.2s; }
+        .setting-row select:focus, .setting-row input[type="range"]:focus { border-color: var(--primary); }
 
-        .ayah-container { flex: 1; overflow-y: auto; padding: 15px 15px 120px; scroll-behavior: smooth; }
-        .ayah-card { background: var(--surface); padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .ayah-card.playing { border-color: var(--primary); background: var(--primary-light); }
-        .ayah-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .ayah-num { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; }
-        .ayah-tools { display: flex; gap: 15px; color: var(--text-mut); font-size: 18px; }
+        .ayah-container { flex: 1; overflow-y: auto; padding: 15px 20px 140px; scroll-behavior: smooth; }
         
-        .ar-txt { font-family: 'Amiri', serif; font-size: var(--ar-font-size); text-align: right; line-height: 2.2; color: var(--text-main); margin-bottom: 15px; font-weight: 400; }
-        .bn-txt { font-size: var(--bn-font-size); color: var(--text-main); line-height: 1.8; font-weight: 500; text-align: justify; }
+        .ayah-card { background: var(--surface); padding: 24px; border-radius: 16px; margin-bottom: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: 0.3s; animation: slideIn 0.3s ease-out; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ayah-card.playing { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary); background: var(--accent-light); }
+        .ayah-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .ayah-num { color: var(--accent); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
+        .ayah-tools { display: flex; gap: 18px; color: var(--text-mut); font-size: 18px; }
+        .ayah-tools i { cursor: pointer; transition: 0.2s; }
+        .ayah-tools i:hover { color: var(--primary); transform: scale(1.15); }
+        
+        .ar-txt { font-family: 'Amiri', serif; font-size: var(--ar-font-size); text-align: right; line-height: 2.2; color: var(--text-main); margin-bottom: 20px; font-weight: normal; }
+        .bn-txt { font-size: var(--bn-font-size); color: var(--text-mut); line-height: 1.8; font-weight: 500; text-align: justify; }
 
-        .player-bar { position: absolute; bottom: 20px; left: 15px; right: 15px; background: var(--surface); padding: 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--border); z-index: 300; }
-        .progress-cont { height: 6px; background: var(--border); border-radius: 10px; margin-bottom: 15px; cursor: pointer; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 10px;}
-        .p-controls { display: flex; justify-content: space-between; align-items: center; }
-        .main-play { width: 55px; height: 55px; background: var(--primary); color: white; border-radius: 50%; border: none; font-size: 20px; cursor: pointer; }
+        .player-bar { position: absolute; bottom: 25px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 16px; box-shadow: var(--shadow-md); border: 1px solid var(--border); z-index: 300; transition: 0.2s; }
+        .player-bar:hover { box-shadow: var(--shadow-md), 0 0 20px rgba(15, 81, 50, 0.2); }
+        [data-theme="dark"] .player-bar { background: rgba(31, 41, 55, 0.95); }
+        
+        .progress-cont { height: 4px; background: var(--border); border-radius: 10px; margin-bottom: 15px; cursor: pointer; overflow: hidden; transition: height 0.2s; }
+        .progress-cont:hover { height: 6px; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 10px; transition: width 0.1s linear; box-shadow: 0 0 10px rgba(15, 81, 50, 0.4); }
+        
+        .p-controls { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .main-play { width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(15, 81, 50, 0.3); flex-shrink: 0; }
+        .main-play:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(15, 81, 50, 0.4); }
+        .main-play:active { transform: scale(0.95); }
 
-        #toast { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 30px; font-size: 14px; display: none; z-index: 1000; font-weight: bold;}
+        #toast { position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: var(--bg); padding: 12px 24px; border-radius: 30px; font-size: 13px; display: none; z-index: 1000; font-weight: 600; box-shadow: var(--shadow-md); text-align: center; white-space: nowrap; animation: slideUp 0.3s ease-out; }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .bismillah { text-align: center; font-family: 'Amiri'; font-size: 28px; color: var(--accent); margin: 10px 0 25px 0; font-weight: normal; }
+
+        .loading-spinner { text-align: center; padding: 50px; font-weight: 600; color: var(--text-mut); }
+        .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .scroll-indicator { position: fixed; bottom: 130px; right: 20px; color: var(--primary); opacity: 0.5; font-size: 12px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-mut); }
+        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -77,18 +148,18 @@
 <div id="app-container">
     <div id="index-view" style="display: flex; flex-direction: column; height: 100%;">
         <div class="app-header">
-            <div class="header-title"><h1>আল কুরআন</h1></div>
-            <button class="icon-btn" onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i></button>
+            <div class="header-title"><i class="fas fa-book-open"></i> <h1>আল কুরআন</h1></div>
+            <button class="icon-btn" onclick="toggleTheme()" title="থিম পরিবর্তন করুন"><i class="fas fa-moon" id="theme-icon"></i></button>
         </div>
 
         <div class="top-tools">
             <div class="search-wrapper">
-                <input type="text" class="search-box" id="surah-search" placeholder="সূরার নাম লিখে খুঁজুন..." onkeyup="filterSurahs()">
+                <input type="text" class="search-box" id="surah-search" placeholder="সূরার নাম লিখুন..." onkeyup="filterSurahs()">
             </div>
             <div class="tabs">
-                <button class="tab-btn active" id="btn-all" onclick="showTab('all')">সব সূরা</button>
+                <button class="tab-btn active" id="btn-all" onclick="showTab('all')">সূরা</button>
                 <button class="tab-btn" id="btn-juz" onclick="showTab('juz')">পারা</button>
-                <button class="tab-btn" id="btn-fav" onclick="showTab('fav')">ফেভারিট</button>
+                <button class="tab-btn" id="btn-fav" onclick="showTab('fav')">পছন্দ</button>
             </div>
         </div>
 
@@ -99,15 +170,15 @@
         <div class="app-header">
             <button class="icon-btn" onclick="closeDetail()"><i class="fas fa-arrow-left"></i></button>
             <div style="text-align:center">
-                <h2 id="det-name" style="font-size:18px; font-weight:800;">সুরা</h2>
-                <span id="det-meta" style="font-size:11px; opacity:0.8;">তথ্য</span>
+                <h2 id="det-name" style="font-size:18px; font-weight:700; color:var(--text-main);">সুরা</h2>
+                <span id="det-meta" style="font-size:12px; color:var(--text-mut);">তথ্য</span>
             </div>
-            <button class="icon-btn" onclick="toggleSettings()"><i class="fas fa-sliders"></i></button>
+            <button class="icon-btn" onclick="toggleSettings()"><i class="fas fa-sliders-h"></i></button>
         </div>
 
         <div id="settings-panel">
             <div class="setting-row">
-                <label>ক্বারী নির্বাচন করুন</label>
+                <label>🎙️ ক্বারী নির্বাচন করুন</label>
                 <select id="reciter-select" onchange="changeReciter()">
                     <option value="ar.alafasy">মিশারি রশিদ আল-আফাসি</option>
                     <option value="ar.abdulsamad">আব্দুল বাসিত</option>
@@ -116,25 +187,29 @@
             </div>
             <div style="display:flex; gap:15px;">
                 <div class="setting-row" style="flex:1">
-                    <label>অডিও স্পিড</label>
+                    <label>⏱️ স্পিড</label>
                     <select id="speed-select" onchange="updateAudioSpeed()">
-                        <option value="0.75">0.75x</option><option value="1.0" selected>1.0x</option>
-                        <option value="1.25">1.25x</option><option value="1.5">1.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="1.0" selected>1.0x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
                     </select>
                 </div>
                 <div class="setting-row" style="flex:1">
-                    <label>রিপিট মোড</label>
+                    <label>🔄 রিপিট</label>
                     <select id="repeat-select">
-                        <option value="1">১ বার</option><option value="3">৩ বার</option><option value="0">লুপ</option>
+                        <option value="1">১ বার</option>
+                        <option value="3">৩ বার</option>
+                        <option value="0">লুপ</option>
                     </select>
                 </div>
             </div>
             <div class="setting-row">
-                <label>আরবি লেখার আকার: <span id="ar-size-label">34px</span></label>
+                <label>🔤 আরবি সাইজ: <span id="ar-size-label">34px</span></label>
                 <input type="range" min="20" max="60" value="34" oninput="changeArFontSize(this.value)">
             </div>
             <div class="setting-row">
-                <label>বাংলা লেখার আকার: <span id="bn-size-label">18px</span></label>
+                <label>📝 বাংলা সাইজ: <span id="bn-size-label">18px</span></label>
                 <input type="range" min="14" max="30" value="18" oninput="changeBnFontSize(this.value)">
             </div>
         </div>
@@ -144,11 +219,11 @@
         <div class="player-bar">
             <div class="progress-cont" onclick="seek(event)"><div class="progress-fill" id="prog-fill"></div></div>
             <div class="p-controls">
-                <div id="p-ayah-num" style="font-weight:800; color:var(--primary); width:30px;">১</div>
-                <button class="icon-btn" style="color:var(--text-main)" onclick="playPrev()"><i class="fas fa-step-backward"></i></button>
-                <button class="main-play" onclick="togglePlay()"><i class="fas fa-play" id="play-icon"></i></button>
-                <button class="icon-btn" style="color:var(--text-main)" onclick="playNext()"><i class="fas fa-step-forward"></i></button>
-                <div id="p-total" style="font-weight:800; color:var(--text-mut); width:30px;">৭</div>
+                <div id="p-ayah-num" style="font-weight:700; color:var(--accent); width:30px; font-size:14px;">১</div>
+                <button class="icon-btn" style="border:none;" onclick="playPrev()" title="আগেরটি"><i class="fas fa-backward-step"></i></button>
+                <button class="main-play" onclick="togglePlay()" title="চালু/বন্ধ করুন"><i class="fas fa-play" id="play-icon"></i></button>
+                <button class="icon-btn" style="border:none;" onclick="playNext()" title="পরেরটি"><i class="fas fa-forward-step"></i></button>
+                <div id="p-total" style="font-weight:600; color:var(--text-mut); width:30px; text-align:right; font-size:14px;">৭</div>
             </div>
         </div>
     </div>
@@ -158,71 +233,111 @@
 <audio id="main-audio"></audio>
 
 <script>
-    const bngNames = ["আল ফাতিহা","আল বাকারা","আল ইমরান","আন নিসা","আল মায়িদাহ","আল আনআম","আল আরাফ","আল আনফাল","আত তাওবাহ","ইউনুস","হুদ","ইউসুফ","আর রাদ","ইবরাহিম","আল হিজর","আন নাহল","বনী ইসরাইল","আল কাহফ","মারইয়াম","ত্বা হা","আল আম্বিয়া","আল হাজ্জ","আল মুমিনুন","আন নূর","আল ফুরকান","আশ শুআরা","আন নামল","আল কাসাস","আল আনকাবুত","আর রুম","লুকমান","আস সাজদাহ","আল আহযাব","সাবা","ফাতির","ইয়া সীন","আস সাফফাত","সোয়াদ","আয যুমার","গাফির","হা মীম সাজদাহ","আশ শূরা","আয যুখরুফ","আদ দুখান","আল জাসিয়াহ","আল আহকাফ","মুহাম্মদ","আল ফাতহ","আল হুজুরাত","কাফ","আয যারিয়াত","আত্ব তূর","আন নাজম","আল কামার","আর রহমান","আল ওয়াকিয়াহ","আল হাদিদ","আল মুজাদিলাহ","আল হাশর","আল মুমতাহিনাহ","আস সাফ","আল জুমুআহ","আল মুনাফিকুন","আত তাগাবুন","আত তালাক","আত তাহরীম","আল মুলক","আল কালাম","আল হাক্কাহ","আল মাআরিজ","নূহ","আল জ্বিন","আল মুয্যাম্মিল","আল মুদ্দাসসির","আল কিয়ামাহ","আদ দাহর","আল মুরসালাত","আন নাবা","আন নাযিয়াত","আবাসা","আত তাকভীর","আল ইনফিতার","আল মুতাফফিফীন","আল ইনশিকাক","আল বুরূজ","আত তারিক","আল আলা","আল গাশিয়াহ","আল ফজর","আল বালাদ","আশ শামস","আল লাইল","আদ দুহা","আল ইনশিরাহ","আত ত্বীন","আল আলাক","আল কদর","আল বাইয়্যিনাহ","আয যিলযাল","আল আদিয়াত","আল কারিয়াহ","আত তাকাসুর","আল আসর","আল হুমাযাহ","আল ফীল","কুরাইশ","আল মাউন","আল কাওসার","আল কাফিরুন","আন নাসর","আল লাহাব","আল ইখলাস","আল ফালাক","আন নাস"];
+    const bngNames = ["আল ফাতিহা","আল বাকারা","আল ইমরান","আন নিসা","আল মায়িদাহ","আল আনআম","আল আরাফ","আল আনফাল","আত তাওবাহ","ইউনুস","হুদ","ইউসুফ","আর রাদ","ইবরাহিম","আল হিজর","আন নাহল","বনী ইসরাইল","আল কাহফ","মারইয়াম","ত্বা হা","আল আম্বিয়া","আল হাজ্জ","আল মুমিনুন","আন নূর","আল ফুরকান","আশ শুআরা","আন নামল","আল কাসাস","আল আনকাবুত","আর রুম","লুকমান","আস সাজদাহ","আল আহযাব","সাবা","ফাতির","ইয়া সীন","আস সাফফাত","সোয়াদ","আয যুমার","গাফির","হা মীম সাজদাহ","আশ শূরা","আয যুখরুফ","আদ দুখান","আল জাসিয়াহ","আল আহকাফ","মুহাম্মদ","আল ফাতহ","আল হুজুরাত","কাফ","আয যারিয়াত","আত্ব তূর","আন নাজম","আল কামার","আর রহমান","আল ওয়াকিয়াহ","আল হাদিদ","আল মুজাদিলাহ","আল হাশর","আল মুমতাহিনাহ","আস সাফ","আল জুমুআহ","আল মুনাফিকুন","আত তাগাবুন","আত তালাক","আত তাহরীম","আল মুলক","আল কালাম","আল হাক্কাহ","আল মাআরিজ","নূহ","আল জ্বিন","আল মুয্যাম্মিল","আল মুদ্দাসসির","আল কিয়ামাহ","আদ দাহর","আল মুরসালাত","আন নাবা","আন নাযিয়াত","আবাসা","আত তাকভীর","আল ইনফিতার","আল মুতাফফিফীন","আল ইনশিকাক","আল বুরূজ","আত তারিক","আল আলা","আল গাশিয়াহ","আল ফজর","আল বালাদ","আশ শামস","আল লাইল","আদ দুহা","আল ইনশিরাহ","আত ত্বীন","আল আলাক","আল কদর","আল বাইয়্যিনাহ","আয যিলযাল","আল আদিয়াত","আল কারিয়াহ","আত তাকাসুর","আল আসর","আল হুমাযাহ","আল ফীল","কুরাইশ","আল মাউন","আল কাওসার","আল কাফিরুন","আন নাসর","আল লাহাব","আল ইখলাস","আল ফালাক","আন নাস"];
     
-    let allSurahs = [], currentAyahs = [], currentSNum = 1, playingIdx = 0, isPlaying = false;
+    let allSurahs = [];
+    let currentAyahs = [];
+    let playingIdx = 0;
+    let isPlaying = false;
     let reciter = 'ar.alafasy';
-    let favorites = JSON.parse(localStorage.getItem('quran_favs')) || [];
+    let favorites = JSON.parse(localStorage.getItem('quran_favs_v2')) || [];
     let currentTab = 'all';
-    
-    // Lazy Load variables
+    let currentContentType = 'surah'; 
+    let currentContentId = 1;
     let renderedCount = 0;
-    const CHUNK_SIZE = 20;
+    const CHUNK_SIZE = 10; // পূর্ববর্তী: 20, এখন: 10 (দ্রুত লোড)
 
     const audio = document.getElementById('main-audio');
 
-    function toBng(n) { return n.toString().split('').map(d => "০১২৩৪৫৬৭৮৯"[d] || d).join(''); }
-    function showToast(msg) {
-        const t = document.getElementById('toast'); t.innerText = msg;
-        t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2500);
+    // ✅ সংখ্যা রূপান্তর ফিক্স করা
+    function toBng(n) {
+        const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        return n.toString().split('').map(d => {
+            const digit = parseInt(d);
+            return !isNaN(digit) ? bengaliDigits[digit] : d;
+        }).join('');
     }
 
-    // --- System Theme Detection ---
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
+
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
-    
     function applyTheme(isDark) {
         const b = document.body;
-        if(isDark) { b.setAttribute('data-theme', 'dark'); document.getElementById('theme-icon').className = 'fas fa-sun'; }
-        else { b.removeAttribute('data-theme'); document.getElementById('theme-icon').className = 'fas fa-moon'; }
+        if(isDark) {
+            b.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-icon').className = 'fas fa-sun';
+            localStorage.setItem('quran_theme', 'dark');
+        } else {
+            b.removeAttribute('data-theme');
+            document.getElementById('theme-icon').className = 'fas fa-moon';
+            localStorage.setItem('quran_theme', 'light');
+        }
     }
 
-    // Initial theme set based on phone settings
-    applyTheme(systemTheme.matches);
+    // সংরক্ষিত থিম লোড করুন
+    const savedTheme = localStorage.getItem('quran_theme');
+    if (savedTheme) {
+        applyTheme(savedTheme === 'dark');
+    } else {
+        applyTheme(systemTheme.matches);
+    }
     
-    // Listen for phone theme changes
     systemTheme.addEventListener('change', e => applyTheme(e.matches));
-
     function toggleTheme() {
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        applyTheme(!isDark); // Toggle manually
+        applyTheme(document.body.getAttribute('data-theme') !== 'dark');
     }
-    // ------------------------------
 
-    // Hardware Back Button Fix
     window.addEventListener('popstate', (e) => {
         if (document.getElementById('detail-view').style.display === 'flex') {
             closeDetail(true);
         }
     });
 
-    window.onload = async () => {
-        const res = await fetch('https://api.alquran.cloud/v1/surah');
-        allSurahs = (await res.json()).data;
-        showTab('all');
-    };
+    window.addEventListener('load', async function() {
+        const surahListDiv = document.getElementById('surah-list');
+        surahListDiv.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p style="margin-top: 20px;">সূরা লোড হচ্ছে...</p></div>';
+        
+        try {
+            const res = await fetch('https://api.alquran.cloud/v1/surah');
+            const result = await res.json();
+            
+            if (result.code === 200 && Array.isArray(result.data)) {
+                allSurahs = result.data;
+                showTab('all');
+            } else {
+                throw new Error('API ডেটা পাওয়া যায়নি');
+            }
+        } catch (e) {
+            surahListDiv.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p style="color: #EF4444; margin-top: 16px;">⚠️ লোড করতে ব্যর্থ হয়েছে</p><p style="font-size: 14px; margin-top: 8px;">আপনার ইন্টারনেট সংযোগ চেক করুন এবং পেজ রিফ্রেশ করুন</p></div>`;
+        }
+    });
 
     function showTab(tab) {
         currentTab = tab;
+        
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-' + tab).classList.add('active');
+        const tabBtn = document.getElementById('btn-' + tab);
+        if (tabBtn) tabBtn.classList.add('active');
         
         const container = document.getElementById('surah-list');
         container.innerHTML = '';
 
-        if(tab === 'all') renderSurahList(allSurahs);
-        else if(tab === 'fav') renderSurahList(allSurahs.filter(s => favorites.includes(s.number)));
-        else if(tab === 'juz') {
-            for(let i=1; i<=30; i++) {
+        if (tab === 'all') {
+            renderSurahList(allSurahs);
+        } else if (tab === 'fav') {
+            const favSurahs = allSurahs.filter(s => favorites.includes(s.number));
+            if (favSurahs.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p style="margin-top: 16px;">কোনো প্রিয় সূরা নেই</p></div>';
+            } else {
+                renderSurahList(favSurahs);
+            }
+        } else if (tab === 'juz') {
+            for(let i = 1; i <= 30; i++) {
                 container.innerHTML += `<div class="surah-card" onclick="openJuz(${i})"><div class="surah-idx">${toBng(i)}</div><div class="surah-info"><div class="surah-name">পারা ${toBng(i)}</div></div></div>`;
             }
         }
@@ -231,81 +346,154 @@
     function renderSurahList(list) {
         const container = document.getElementById('surah-list');
         container.innerHTML = '';
-        if(list.length === 0) container.innerHTML = '<p style="text-align:center; padding:20px; color:gray;">কোনো সূরা পাওয়া যায়নি</p>';
+        
+        if (!list || list.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p style="margin-top: 16px;">কোনো সূরা পাওয়া যায়নি</p></div>';
+            return;
+        }
         
         list.forEach(s => {
+            if (!s || !s.number) return;
+            
             const isFav = favorites.includes(s.number);
-            container.innerHTML += `
-                <div class="surah-card" onclick="openSurah(${s.number}, '${bngNames[s.number-1]}', ${s.numberOfAyahs}, '${s.revelationType}')">
+            const bengaliName = bngNames[s.number - 1] || `সূরা ${s.number}`;
+            const revealType = s.revelationType === 'Meccan' ? 'মাক্কী' : 'মাদানী';
+            
+            const html = `
+                <div class="surah-card" onclick="openSurah(${s.number}, '${bengaliName}', ${s.numberOfAyahs}, '${s.revelationType}')">
                     <div class="surah-idx">${toBng(s.number)}</div>
                     <div class="surah-info">
-                        <div class="surah-name">${bngNames[s.number-1]}</div>
-                        <div class="surah-meta">${s.revelationType === 'Meccan' ? 'মাক্কী' : 'মাদানী'} • আয়াত: ${toBng(s.numberOfAyahs)}</div>
+                        <div class="surah-name">${bengaliName}</div>
+                        <div class="surah-meta">${revealType} • আয়াত: ${toBng(s.numberOfAyahs)}</div>
                     </div>
-                    <i class="${isFav ? 'fas' : 'far'} fa-heart" style="color:${isFav ? '#EF4444' : '#cbd5e1'}; font-size:22px;" onclick="toggleFav(event, ${s.number})"></i>
+                    <i class="${isFav ? 'fas' : 'far'} fa-heart surah-fav" style="color:${isFav ? 'var(--accent)' : 'var(--text-mut)'}; font-size:20px;" onclick="toggleFav(event, ${s.number})" title="${isFav ? 'পছন্দ থেকে সরিয়ে দিন' : 'পছন্দে যোগ করুন'}"></i>
                 </div>`;
+            
+            container.innerHTML += html;
         });
     }
 
-    async function openSurah(num, name, total, type) {
-        history.pushState({view: 'detail'}, '', '#surah');
-        currentSNum = num;
-        setupDetailView(name, `${type === 'Meccan' ? 'মাক্কী' : 'মাদানী'} • আয়াত: ${toBng(total)}`);
-        await fetchAndRender(`https://api.alquran.cloud/v1/surah/${num}/editions/quran-uthmani,bn.bengali,${reciter}`);
-    }
-
-    async function openJuz(num) {
-        history.pushState({view: 'detail'}, '', '#juz');
-        setupDetailView(`পারা ${toBng(num)}`, `বিস্তারিত`);
-        await fetchAndRender(`https://api.alquran.cloud/v1/juz/${num}/editions/quran-uthmani,bn.bengali,${reciter}`);
-    }
-
     function setupDetailView(title, meta) {
+        if (!history.state || history.state.view !== 'detail') {
+            history.pushState({view: 'detail'}, '', '#detail');
+        }
         document.getElementById('index-view').style.display = 'none';
         document.getElementById('detail-view').style.display = 'flex';
         document.getElementById('det-name').innerText = title;
         document.getElementById('det-meta').innerText = meta;
-        document.getElementById('ayah-list').innerHTML = '<p style="text-align:center; padding:50px; font-weight:700;">লোড হচ্ছে...</p>';
+        document.getElementById('ayah-list').innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p style="margin-top: 20px;">আয়াত লোড হচ্ছে...</p></div>';
     }
 
-    async function fetchAndRender(url) {
-        const res = await fetch(url);
-        const data = await res.json();
-        
-        currentAyahs = data.data[0].ayahs.map((a, i) => ({
-            ar: a.text, bn: data.data[1].ayahs[i].text,
-            audio: data.data[2].ayahs[i].audio, num: a.numberInSurah || (i+1)
-        }));
-
-        document.getElementById('p-total').innerText = toBng(currentAyahs.length);
-        
-        // Start Lazy Loading
-        renderAyahsChunk(true);
-        loadAyahAudio(0);
+    async function openSurah(num, name, total, type) {
+        currentContentType = 'surah'; 
+        currentContentId = num;
+        setupDetailView(name, `${type === 'Meccan' ? 'মাক্কী' : 'মাদানী'} • আয়াত: ${toBng(total)}`);
+        await loadContent();
     }
 
-    // --- Lazy Loading Logic ---
-    function renderAyahsChunk(reset = false) {
-        const container = document.getElementById('ayah-list');
-        if (reset) {
+    async function openJuz(num) {
+        currentContentType = 'juz'; 
+        currentContentId = num;
+        setupDetailView(`পারা ${toBng(num)}`, `বিস্তারিত`);
+        await loadContent();
+    }
+
+    async function loadContent() {
+        try {
+            let arAyahs, bnAyahs, auAyahs;
+            
+            if (currentContentType === 'surah') {
+                const arRes = await fetch(`https://api.alquran.cloud/v1/surah/${currentContentId}/quran-uthmani`);
+                const arData = await arRes.json();
+                arAyahs = arData.data.ayahs;
+                
+                const bnRes = await fetch(`https://api.alquran.cloud/v1/surah/${currentContentId}/bn.bengali`);
+                const bnData = await bnRes.json();
+                bnAyahs = bnData.data.ayahs;
+                
+                const auRes = await fetch(`https://api.alquran.cloud/v1/surah/${currentContentId}/${reciter}`);
+                const auData = await auRes.json();
+                auAyahs = auData.data.ayahs;
+                
+            } else if (currentContentType === 'juz') {
+                const [arRes, bnRes, auRes] = await Promise.all([
+                    fetch(`https://api.alquran.cloud/v1/juz/${currentContentId}/quran-uthmani`),
+                    fetch(`https://api.alquran.cloud/v1/juz/${currentContentId}/bn.bengali`),
+                    fetch(`https://api.alquran.cloud/v1/juz/${currentContentId}/${reciter}`)
+                ]);
+                
+                arAyahs = (await arRes.json()).data.ayahs;
+                bnAyahs = (await bnRes.json()).data.ayahs;
+                auAyahs = (await auRes.json()).data.ayahs;
+            }
+
+            currentAyahs = arAyahs.map((a, i) => {
+                const bnAyah = bnAyahs[i] || { text: '' };
+                const auAyah = auAyahs[i] || { audio: '' };
+                
+                return {
+                    ar: a.text || '', 
+                    bn: bnAyah.text || '', 
+                    audio: auAyah.audio || '',
+                    num: a.numberInSurah || a.number || (i + 1),
+                    surahNum: a.surah?.number || currentContentId
+                };
+            });
+
+            document.getElementById('p-total').innerText = toBng(currentAyahs.length);
+            
+            const container = document.getElementById('ayah-list');
             container.innerHTML = '';
-            renderedCount = 0;
-        }
+            
+            if (currentContentType === 'surah' && currentContentId !== 1 && currentContentId !== 9) {
+                container.innerHTML = `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
+            }
 
+            renderedCount = 0;
+            renderAyahsChunk();
+            loadAyahAudio(0);
+
+        } catch (error) {
+            document.getElementById('ayah-list').innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p style="color: #EF4444; margin-top: 16px;">⚠️ লোড করতে সমস্যা হয়েছে</p></div>`;
+        }
+    }
+
+    function renderAyahsChunk() {
+        const container = document.getElementById('ayah-list');
         const toRender = currentAyahs.slice(renderedCount, renderedCount + CHUNK_SIZE);
+        
         if (toRender.length === 0) return;
 
         let html = '';
         toRender.forEach((a, i) => {
             const actualIndex = renderedCount + i;
-            const cleanAr = a.ar.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ", "");
+            
+            if (!a || !a.ar) return;
+            
+            let cleanAr = a.ar;
+            let bismillahHtml = '';
+
+            if(a.num === 1 && a.surahNum !== 1 && a.surahNum !== 9) {
+                if (cleanAr.startsWith("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ")) {
+                    cleanAr = cleanAr.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ", "");
+                }
+                if (currentContentType === 'juz') {
+                    bismillahHtml = `<div class="bismillah" style="margin-top:30px;">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
+                }
+            }
+
+            const badgeText = currentContentType === 'juz' 
+                ? `${bngNames[a.surahNum - 1]} • আয়াত ${toBng(a.num)}`
+                : `আয়াত ${toBng(a.num)}`;
+
             html += `
+                ${bismillahHtml}
                 <div class="ayah-card" id="ayah-card-${actualIndex}">
                     <div class="ayah-header">
-                        <span class="ayah-num">আয়াত ${toBng(a.num)}</span>
+                        <span class="ayah-num">${badgeText}</span>
                         <div class="ayah-tools">
-                            <i class="fas fa-copy" onclick="copyAyah(${actualIndex})"></i>
-                            <i class="fas fa-share-alt" onclick="shareAyah(${actualIndex})"></i>
+                            <i class="fas fa-copy" onclick="copyAyah(${actualIndex})" title="কপি করুন"></i>
+                            <i class="fas fa-share-nodes" onclick="shareAyah(${actualIndex})" title="শেয়ার করুন"></i>
                         </div>
                     </div>
                     <div class="ar-txt">${cleanAr}</div>
@@ -317,19 +505,20 @@
         renderedCount += toRender.length;
     }
 
-    // Scroll event listener for loading more Ayahs
-    document.getElementById('ayah-list').addEventListener('scroll', function() {
-        if (this.scrollTop + this.clientHeight >= this.scrollHeight - 300) {
-            renderAyahsChunk();
+    document.addEventListener('DOMContentLoaded', function() {
+        const ayahContainer = document.getElementById('ayah-list');
+        if (ayahContainer) {
+            ayahContainer.addEventListener('scroll', function() {
+                if (this.scrollTop + this.clientHeight >= this.scrollHeight - 500) {
+                    renderAyahsChunk();
+                }
+            });
         }
     });
-    // ----------------------------
 
     function loadAyahAudio(idx) {
-        // If we jump to an audio that hasn't rendered yet, render it
-        while (idx >= renderedCount) {
-            renderAyahsChunk();
-        }
+        if(idx < 0 || idx >= currentAyahs.length) return;
+        while (idx >= renderedCount) renderAyahsChunk(); 
 
         playingIdx = idx;
         audio.src = currentAyahs[idx].audio;
@@ -339,29 +528,59 @@
         const activeCard = document.getElementById(`ayah-card-${idx}`);
         if(activeCard) {
             activeCard.classList.add('playing');
-            // Scroll to the playing ayah
             activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         if(isPlaying) audio.play();
     }
 
     function togglePlay() {
-        if(isPlaying) { audio.pause(); document.getElementById('play-icon').className = 'fas fa-play'; }
-        else { audio.play(); document.getElementById('play-icon').className = 'fas fa-pause'; }
+        if(isPlaying) { 
+            audio.pause(); 
+            document.getElementById('play-icon').className = 'fas fa-play'; 
+        }
+        else { 
+            audio.play(); 
+            document.getElementById('play-icon').className = 'fas fa-pause'; 
+        }
         isPlaying = !isPlaying;
     }
 
-    function playNext() { if(playingIdx < currentAyahs.length - 1) loadAyahAudio(playingIdx + 1); else { isPlaying=false; document.getElementById('play-icon').className='fas fa-play'; } }
-    function playPrev() { if(playingIdx > 0) loadAyahAudio(playingIdx - 1); }
+    function playNext() { 
+        if(playingIdx < currentAyahs.length - 1) {
+            loadAyahAudio(playingIdx + 1);
+        } else { 
+            isPlaying = false; 
+            document.getElementById('play-icon').className = 'fas fa-play';
+            showToast('সূরা শেষ হয়েছে');
+        } 
+    }
+
+    function playPrev() { 
+        if(playingIdx > 0) {
+            loadAyahAudio(playingIdx - 1);
+        }
+    }
 
     audio.onended = () => {
         const repeat = document.getElementById('repeat-select').value;
-        if(repeat == "0") audio.play();
-        else playNext();
+        if(repeat == "0") {
+            audio.currentTime = 0;
+            audio.play();
+        } else {
+            playNext();
+        }
     };
 
-    audio.ontimeupdate = () => { if(audio.duration) document.getElementById('prog-fill').style.width = `${(audio.currentTime / audio.duration) * 100}%`; };
-    function seek(e) { const rect = e.target.getBoundingClientRect(); audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration; }
+    audio.ontimeupdate = () => { 
+        if(audio.duration) {
+            document.getElementById('prog-fill').style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+        }
+    };
+
+    function seek(e) { 
+        const rect = e.target.getBoundingClientRect(); 
+        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration; 
+    }
 
     function toggleSettings() {
         const p = document.getElementById('settings-panel');
@@ -371,66 +590,133 @@
     function changeArFontSize(v) {
         document.documentElement.style.setProperty('--ar-font-size', v + 'px');
         document.getElementById('ar-size-label').innerText = v + 'px';
+        localStorage.setItem('ar_font_size', v);
     }
 
     function changeBnFontSize(v) {
         document.documentElement.style.setProperty('--bn-font-size', v + 'px');
         document.getElementById('bn-size-label').innerText = v + 'px';
+        localStorage.setItem('bn_font_size', v);
     }
 
     function changeReciter() {
         reciter = document.getElementById('reciter-select').value;
+        localStorage.setItem('quran_reciter', reciter);
         toggleSettings();
-        const isJuz = document.getElementById('det-name').innerText.includes('পারা');
-        if(isJuz) {
-            let num = parseInt(document.getElementById('det-name').innerText.replace('পারা ', ''));
-            fetchAndRender(`https://api.alquran.cloud/v1/juz/${num}/editions/quran-uthmani,bn.bengali,${reciter}`);
-        } else {
-            fetchAndRender(`https://api.alquran.cloud/v1/surah/${currentSNum}/editions/quran-uthmani,bn.bengali,${reciter}`);
-        }
+        document.getElementById('ayah-list').innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
+        loadContent();
     }
 
-    function updateAudioSpeed() {
-        audio.playbackRate = parseFloat(document.getElementById('speed-select').value);
+    function updateAudioSpeed() { 
+        audio.playbackRate = parseFloat(document.getElementById('speed-select').value); 
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.top = "0"; 
+        textArea.style.left = "0"; 
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus(); 
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast('✅ আয়াত কপি করা হয়েছে!');
+        } catch (err) {
+            showToast('❌ কপি করতে ব্যর্থ হয়েছে');
+        }
+        document.body.removeChild(textArea);
     }
 
     function copyAyah(idx) {
         const a = currentAyahs[idx];
-        navigator.clipboard.writeText(`${a.ar}\n\n${a.bn}`);
-        showToast('আয়াত কপি হয়েছে!');
+        const textToCopy = `${a.ar}\n\n${a.bn}\n\n- সূরা ${bngNames[a.surahNum-1]}, আয়াত ${toBng(a.num)}`;
+        
+        if (!navigator.clipboard) {
+            fallbackCopyTextToClipboard(textToCopy);
+            return;
+        }
+        navigator.clipboard.writeText(textToCopy).then(function() {
+            showToast('✅ আয়াত কপি করা হয়েছে!');
+        }, function(err) {
+            fallbackCopyTextToClipboard(textToCopy);
+        });
     }
 
     function shareAyah(idx) {
         const a = currentAyahs[idx];
-        const text = `আয়াত ${toBng(a.num)}\n\n${a.ar}\n\n${a.bn}\n\n- আল কুরআন অ্যাপ`;
-        if(navigator.share) navigator.share({ title: 'আল কুরআন', text: text });
-        else copyAyah(idx); 
+        const textToShare = `${a.ar}\n\n${a.bn}\n\n- সূরা ${bngNames[a.surahNum-1]}, আয়াত ${toBng(a.num)}`;
+        
+        if (navigator.share) {
+            navigator.share({ 
+                title: 'আল কুরআন', 
+                text: textToShare 
+            }).catch((e) => {});
+        } else {
+            copyAyah(idx);
+            showToast('📋 কপি করা হয়েছে!');
+        }
     }
 
     function toggleFav(e, num) {
         e.stopPropagation();
-        if(favorites.includes(num)) favorites = favorites.filter(f => f !== num);
-        else favorites.push(num);
-        localStorage.setItem('quran_favs', JSON.stringify(favorites));
-        if(currentTab === 'fav') showTab('fav');
-        else showTab('all');
+        if(favorites.includes(num)) {
+            favorites = favorites.filter(f => f !== num);
+            showToast('❤️ পছন্দ থেকে সরানো হয়েছে');
+        } else {
+            favorites.push(num);
+            showToast('❤️ পছন্দে যোগ করা হয়েছে');
+        }
+        localStorage.setItem('quran_favs_v2', JSON.stringify(favorites));
+        if(currentTab === 'fav') {
+            showTab('fav');
+        } else {
+            showTab('all');
+        }
     }
 
     function closeDetail(fromPopState = false) {
         document.getElementById('detail-view').style.display = 'none';
         document.getElementById('index-view').style.display = 'flex';
-        audio.pause(); isPlaying = false;
+        audio.pause(); 
+        isPlaying = false;
         document.getElementById('play-icon').className = 'fas fa-play';
         document.getElementById('settings-panel').style.display = 'none';
-        
-        if(!fromPopState) history.back(); 
+        if(!fromPopState) {
+            history.back();
+        }
     }
 
     function filterSurahs() {
-        const q = document.getElementById('surah-search').value;
-        if(currentTab === 'all') renderSurahList(allSurahs.filter(s => bngNames[s.number-1].includes(q)));
+        const q = document.getElementById('surah-search').value.toLowerCase();
+        if(currentTab === 'all') {
+            const filtered = allSurahs.filter(s => bngNames[s.number-1].toLowerCase().includes(q));
+            renderSurahList(filtered);
+        }
     }
+
+    // সংরক্ষিত সেটিংস লোড করুন
+    window.addEventListener('load', function() {
+        const savedReciter = localStorage.getItem('quran_reciter');
+        if (savedReciter) {
+            reciter = savedReciter;
+            document.getElementById('reciter-select').value = reciter;
+        }
+
+        const savedArSize = localStorage.getItem('ar_font_size');
+        if (savedArSize) {
+            document.getElementById('ar-size-label').innerText = savedArSize + 'px';
+            document.documentElement.style.setProperty('--ar-font-size', savedArSize + 'px');
+        }
+
+        const savedBnSize = localStorage.getItem('bn_font_size');
+        if (savedBnSize) {
+            document.getElementById('bn-size-label').innerText = savedBnSize + 'px';
+            document.documentElement.style.setProperty('--bn-font-size', savedBnSize + 'px');
+        }
+    });
 </script>
 
 </body>
-                        </html>
+                </html>
