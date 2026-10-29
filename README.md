@@ -4,9 +4,8 @@
 
 **একটি সুন্দর, বিজ্ঞাপনমুক্ত এবং উন্নত ফিচার সমৃদ্ধ অ্যান্ড্রয়েড আল-কোরআন অ্যাপ্লিকেশন।**
 
-[![Android](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](#)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](#)
-[![Maintained](https://img.shields.io/badge/Maintained-Yes-success.svg)](#)
+[![Website](https://img.shields.io/badge/Website-Visit_Now-4285F4?style=flat&logo=googlechrome&logoColor=white)](https://yourwebsite.com)
+[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=flat&logo=gmail&logoColor=white)](mailto:your.email@gmail.com)
 
 </div>
 
@@ -46,8 +45,3 @@
 ## 🚀 কীভাবে প্রজেক্টটি রান করবেন? (Getting Started)
 
 এই প্রজেক্টটি আপনার কম্পিউটারে রান করার জন্য নিচের ধাপগুলো হুবহু অনুসরণ করুন:
-
-### ১. সোর্স কোড ক্লোন করা (Clone the Source Code)
-প্রথমে আপনার কম্পিউটারে গিটহাব থেকে প্রজেক্টটি ক্লোন করুন। টার্মিনাল বা গিট ব্যাশ ওপেন করে লিখুন:
-```bash
-git clone https://github.com/yourusername/QuranApp.git
